@@ -1,0 +1,129 @@
+/* Create table about the people and what they do here */
+CREATE TABLE celebrities (id INTEGER PRIMARY KEY,
+    fullname TEXT,
+born_city TEXT,	
+born_country TEXT
+    );
+
+INSERT INTO celebrities (ID, fullname, born_city, born_country)
+VALUES (1, 'Keanu Reeves', 'Toronto', 'Canada');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES (2, 'Alexandra Grant', 'Ohio', 'US');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+ VALUES (3, 'Justin Timberlake', 'Tennessee', 'US');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES (4, 'Jessica Biel', 'Minnesota', 'US');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES (5, 'Tina Turner', 'Tennessee', 'US');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES (6, 'Erwin Bach', 'Cologne', 'Germany');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES (7, 'Michael Douglas', 'New Jersey', 'US');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES (8, 'Catherine Zeta-Jones', 'Swansea', 'United Kingdom');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES  (9, 'Lisa Kudrow', 'California', 'US');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES  (10, 'Michael Stern','Null', 'France');
+ INSERT INTO celebrities (ID, fullname, born_city,born_country)
+ VALUES (11, 'Matt Damon', 'Massachusetts', 'US');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES (12, 'Luciana Barroso', 'Salta Province', 'Argentina');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES  (13, 'Blake Lively', 'California', 'US');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES (14, 'Ryan Reynolds', 'Vancouver', 'Canada');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES (15, 'Eva Mendes', 'Miami', 'Florida');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES (16, 'Ryan Gosling', 'London', 'Canada');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES  (17, 'Penélope Cruz', 'Municipality of Alcobendas', 'Spain');
+INSERT INTO celebrities (ID, fullname, born_city,born_country)
+VALUES  (18, 'Javier Bardem', 'Municipality of Las Palmas', 'Spain');
+    
+CREATE TABLE married (id INTEGER PRIMARY KEY,
+    spouse1 INTEGER,
+    spouse2 INTEGER,
+marriageyear INTEGER);
+    
+INSERT INTO married (ID, spouse1, spouse2, marriageyear)
+VALUES
+    (1, '3', '4', '2011'),
+    (2, '5', '6', '2013'),
+    (3, '7', '8', '1998'),
+    (4, '9', '10', '1995'),
+    (5, '11', '12', '2005'),
+    (6, '13', '14', '2012'),
+    (7, '15', '16', '2011'),
+    (8, '17', '18', '2010');
+
+CREATE TABLE profession (id INTEGER PRIMARY KEY,
+    celebrity_id INTEGER,
+    profession TEXT);
+INSERT INTO profession (ID, celebrity_iD, profession)
+VALUES
+    (1, 1, 'Actor'),
+    (2, 2, 'Writer'),
+    (3, 3, 'Singer'),
+    (4, 3, 'Actor'),
+    (5, 4, 'Actress'),
+    (6, 5, 'Singer'),
+    (7, 5, 'Actor'),
+    (8, 6, 'Music producer'),
+    (9, 7, 'Actor'),
+    (10, 8, 'Actress'),
+    (11, 9, 'Actress'),
+    (12, 10, 'Advertising executive'),
+    (13, 11, 'Actor'),
+    (14, 12, 'Wife'),
+    (15, 13, 'Actress'),
+    (16, 14, 'Actor'),
+    (17, 15, 'Actress'),
+    (18, 16, 'Actor'),
+    (19, 17, 'Actress'),
+    (20, 18, 'Actor');
+    
+    
+    CREATE TABLE CelebrityMovies (
+    ID INTEGER PRIMARY KEY,
+    Celebrity_ID INTEGER,
+    Movies text
+);
+INSERT INTO CelebrityMovies (ID, Celebrity_ID, Movies) VALUES
+(1, 1, 'John Wick,The Matrix, Speed, Point Break'),
+(2, 2, NULL),
+(3, 3, 'Palmer, Friends with Benefits'),
+(4, 4, 'Candy, The Sinner, Blade: Trinity'),
+(5, 5, 'Mad Max Beyond Thunderdome'),
+(6, 6, NULL),
+(7, 7, 'And So It Goes, Avengers: Endgame, Wall Street: Money Never Sleeps'),
+(8, 8, 'Ocean Twelve, The Mask of Zorro, Chicago'),
+(9, 9, 'Friends'),
+(10, 10, NULL),
+(11, 11, 'Interstellar, Elysium, Suburbicon'),
+(12, 12, NULL),
+(13, 13, 'Gossip Girl, The Age of Adaline, Green Lantern'),
+(14, 14, 'Deadpool, Free Guy, The Proposal'),
+(15, 15, '2 Fast 2 Furious, Ghost Rider, Hitch, The Place Beyond The Pines'),
+(16, 16, 'The Place Beyond The Pines, La La Land, The Notebook'),
+(17, 17, 'Jamon Jamon, Everybody Knows, Loving Pablo'),
+(18, 18, 'Jamon Jamon, Everybody Knows, Loving Pablo');
+
+ --What movies they are in
+SELECT celebrities.fullname, CelebrityMovies.Movies FROM celebrities
+INNER JOIN CelebrityMovies
+ON celebrities.id = CelebrityMovies.Celebrity_ID;
+
+
+SELECT celebrities.fullname,profession.profession FROM celebrities
+INNER JOIN profession
+ON celebrities.id = profession.Celebrity_ID;
+
+SELECT DISTINCT born_country FROM celebrities;
+
+SELECT a.fullname, b.fullname, married.marriageyear AS Married_in FROM married
+JOIN celebrities a
+ON married.spouse1=a.id
+JOIN celebrities b
+ON married.spouse2=b.id;
