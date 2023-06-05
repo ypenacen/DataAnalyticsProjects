@@ -1,0 +1,12 @@
+CREATE TABLE Obagipoints (id INTEGER PRIMARY KEY,
+    productname TEXT,
+    description TEXT,
+    points INTEGER);
+    
+INSERT INTO Obagipoints (ID, productname, description, points)
+VALUES 
+(1, "Nu-derm SPF32", "Formulated with zinc", 260),
+(2, "Obagi-C lotion", "Moisturizer that exfoliates", 400),
+(3, "Obagi-C cream", "Moisturizer that exfoliates", 535),
+(4, "Professional-C", "Microdernabrassion", 420),
+(5, "Sun Shield", "SPF 50", 270);
