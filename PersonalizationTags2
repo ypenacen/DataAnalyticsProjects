@@ -1,0 +1,243 @@
+SET XACT_ABORT ON;
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+GO
+
+-- Table Parameters:
+DECLARE @TableName VARCHAR(100) = 'V_oms_host_info'; -- Actual name of table (or view) from which to extract data.
+DECLARE @HasVar VARCHAR(32) = 'hasHostInfo'; -- Unique ATM boolean variable indicating that this table should be included.
+DECLARE @Alias VARCHAR(12) = 'HInfo'; -- Unique table alias.
+
+-- Tag Parameters:
+DECLARE @Tag VARCHAR(48) = 'HOSTFIRSTNAME'; -- Actual Tag Value.
+DECLARE @ColumnName VARCHAR(100) = 'first_name'; -- Actual name of column to extract.
+DECLARE @ExtractName VARCHAR(100) = 'HostFirstName'; -- Corresponding ExtractColumnName from the eInsight_L_Tags table.
+DECLARE @TagType VARCHAR(24) = 'NVARCHAR(35)'; -- Actual SQL Data type of the extract data.
+
+DECLARE @ExpressionGroupID INT;
+DECLARE @ExpressionOrderID INT;
+
+BEGIN TRANSACTION;
+
+-- ApplicationTagFieldsHasPropertiesCase
+SET @ExpressionGroupID = 55;
+
+SELECT @ExpressionOrderID = MAX(ExpressionOrderID) + 1
+ FROM eInsight_L_DynamicProfile_Expressions
+ WHERE FK_ExpressionGroupID = @ExpressionGroupID;
+
+INSERT INTO eInsight_L_DynamicProfile_Expressions
+  (
+   FK_ExpressionGroupID,
+   ExpressionOrderID,
+   ExpressionCondition,
+   ExpressionFilter,
+   ExpressionInputExtractData,
+   ExpressionOutputExtractData,
+   ExpressionResultMethod,
+   ExpressionResultText,
+   ExpressionDescription
+  )
+VALUES
+  (
+   @ExpressionGroupID, -- FK_ExpressionGroupID - int
+   @ExpressionOrderID, -- ExpressionOrderID - int
+   'Equals', -- ExpressionCondition - varchar(50)
+   @Tag, -- ExpressionFilter - varchar(50)
+   'thisTagFieldNode_ValueToCheck', -- ExpressionInputExtractData - varchar(50)
+   @HasVar, -- ExpressionOutputExtractData - varchar(50)
+   'AddExtract', -- ExpressionResultMethod - varchar(100)
+   'TRUE', -- ExpressionResultText - varchar(max)
+   'TagFieldsHasPropertiesCase'  -- ExpressionDescription - varchar(100)
+  );
+
+
+-- DynamicMethod:SetQueryForClauses
+SET @ExpressionGroupID = 18;
+
+SELECT @ExpressionOrderID = MAX(ExpressionOrderID) + 1
+ FROM eInsight_L_DynamicProfile_Expressions
+ WHERE FK_ExpressionGroupID = @ExpressionGroupID
+  AND ExpressionOutputExtractData = 'query'
+  AND ExpressionResultMethod = 'AppendExtract';
+
+UPDATE eInsight_L_DynamicProfile_Expressions
+ SET ExpressionOrderID += 1
+  WHERE FK_ExpressionGroupID = @ExpressionGroupID
+   AND ExpressionOrderID >= @ExpressionOrderID;
+
+INSERT INTO eInsight_L_DynamicProfile_Expressions
+  (
+   FK_ExpressionGroupID,
+   ExpressionOrderID,
+   ExpressionCondition,
+   ExpressionFilter,
+   ExpressionInputExtractData,
+   ExpressionOutputExtractData,
+   ExpressionResultMethod,
+   ExpressionResultText,
+   ExpressionDescription
+  )
+VALUES
+  (
+   @ExpressionGroupID, -- FK_ExpressionGroupID - int
+   @ExpressionOrderID, -- ExpressionOrderID - int
+   'Equals', -- ExpressionCondition - varchar(50)
+   'TRUE', -- ExpressionFilter - varchar(50)
+   @HasVar, -- ExpressionInputExtractData - varchar(50)
+   'query', -- ExpressionOutputExtractData - varchar(50)
+   'AppendExtract', -- ExpressionResultMethod - varchar(100)
+   ' LEFT JOIN ' + @TableName + ' ' + @Alias + ' WITH(NOLOCK) ON C.CustomerID = ' + @Alias + '.CustomerID ', -- ExpressionResultText - varchar(max)
+   'DynamicMethod: To Set Query for Clauses'  -- ExpressionDescription - varchar(100)
+  );
+
+-- DynamicMethod:mapFieldNameToColumn
+SET @ExpressionGroupID = 4;
+
+SELECT @ExpressionOrderID = MAX(ExpressionOrderID)
+ FROM eInsight_L_DynamicProfile_Expressions
+ WHERE FK_ExpressionGroupID = @ExpressionGroupID;
+
+UPDATE eInsight_L_DynamicProfile_Expressions
+ SET ExpressionOrderID += 1
+  WHERE FK_ExpressionGroupID = @ExpressionGroupID
+   AND ExpressionOrderID = @ExpressionOrderID;
+
+INSERT INTO eInsight_L_DynamicProfile_Expressions
+  (
+   FK_ExpressionGroupID,
+   ExpressionOrderID,
+   ExpressionCondition,
+   ExpressionFilter,
+   ExpressionInputExtractData,
+   ExpressionOutputExtractData,
+   ExpressionResultMethod,
+   ExpressionResultText,
+   ExpressionDescription
+  )
+VALUES
+  (
+   @ExpressionGroupID, -- FK_ExpressionGroupID - int
+   @ExpressionOrderID, -- ExpressionOrderID - int
+   'Equals', -- ExpressionCondition - varchar(50)
+   @Tag, -- ExpressionFilter - varchar(50)
+   'thisInput', -- ExpressionInputExtractData - varchar(50)
+   'thisOutput', -- ExpressionOutputExtractData - varchar(50)
+   'AddExtract', -- ExpressionResultMethod - varchar(100)
+   @Alias + '.' + @ColumnName + ' as [' + @ExtractName + ']', -- ExpressionResultText - varchar(max)
+   'DynamicMethod: To process field name'  -- ExpressionDescription - varchar(100)
+  );
+
+-- DynamicMethod:mapFieldNameToActualColumn
+SET @ExpressionGroupID = 5;
+
+SELECT @ExpressionOrderID = MAX(ExpressionOrderID)
+ FROM eInsight_L_DynamicProfile_Expressions
+ WHERE FK_ExpressionGroupID = @ExpressionGroupID;
+
+UPDATE eInsight_L_DynamicProfile_Expressions
+ SET ExpressionOrderID += 1
+  WHERE FK_ExpressionGroupID = @ExpressionGroupID
+   AND ExpressionOrderID = @ExpressionOrderID;
+
+INSERT INTO eInsight_L_DynamicProfile_Expressions
+  (
+   FK_ExpressionGroupID,
+   ExpressionOrderID,
+   ExpressionCondition,
+   ExpressionFilter,
+   ExpressionInputExtractData,
+   ExpressionOutputExtractData,
+   ExpressionResultMethod,
+   ExpressionResultText,
+   ExpressionDescription
+  )
+VALUES
+  (
+   @ExpressionGroupID, -- FK_ExpressionGroupID - int
+   @ExpressionOrderID, -- ExpressionOrderID - int
+   'Equals', -- ExpressionCondition - varchar(50)
+   @Tag, -- ExpressionFilter - varchar(50)
+   'thisInput', -- ExpressionInputExtractData - varchar(50)
+   'thisOutput', -- ExpressionOutputExtractData - varchar(50)
+   'AddExtract', -- ExpressionResultMethod - varchar(100)
+   @ColumnName, -- ExpressionResultText - varchar(max)
+   'DynamicMethod: To process field name'  -- ExpressionDescription - varchar(100)
+  );
+
+-- DynamicMethod:mapFieldNameToColumnForTempExtract
+SET @ExpressionGroupID = 53;
+
+SELECT @ExpressionOrderID = MAX(ExpressionOrderID)
+ FROM eInsight_L_DynamicProfile_Expressions
+ WHERE FK_ExpressionGroupID = @ExpressionGroupID;
+
+UPDATE eInsight_L_DynamicProfile_Expressions
+ SET ExpressionOrderID += 1
+  WHERE FK_ExpressionGroupID = @ExpressionGroupID
+   AND ExpressionOrderID = @ExpressionOrderID;
+
+INSERT INTO eInsight_L_DynamicProfile_Expressions
+  (
+   FK_ExpressionGroupID,
+   ExpressionOrderID,
+   ExpressionCondition,
+   ExpressionFilter,
+   ExpressionInputExtractData,
+   ExpressionOutputExtractData,
+   ExpressionResultMethod,
+   ExpressionResultText,
+   ExpressionDescription
+  )
+VALUES
+  (
+   @ExpressionGroupID, -- FK_ExpressionGroupID - int
+   @ExpressionOrderID, -- ExpressionOrderID - int
+   'Equals', -- ExpressionCondition - varchar(50)
+   @Tag, -- ExpressionFilter - varchar(50)
+   'thisInput', -- ExpressionInputExtractData - varchar(50)
+   'thisOutput', -- ExpressionOutputExtractData - varchar(50)
+   'AddExtract', -- ExpressionResultMethod - varchar(100)
+   @ExtractName, -- ExpressionResultText - varchar(max)
+   'DynamicMethod: To process field name'  -- ExpressionDescription - varchar(100)
+  );
+
+-- ApplicationTagFieldIncludeCase
+SET @ExpressionGroupID = 3;
+
+SELECT @ExpressionOrderID = MAX(ExpressionOrderID) + 1
+ FROM eInsight_L_DynamicProfile_Expressions
+ WHERE FK_ExpressionGroupID = @ExpressionGroupID
+  AND ExpressionOutputExtractData = 'dummyDataValue';
+
+UPDATE eInsight_L_DynamicProfile_Expressions
+ SET ExpressionOrderID += 1
+  WHERE FK_ExpressionGroupID = @ExpressionGroupID
+   AND ExpressionOrderID >= @ExpressionOrderID;
+
+INSERT INTO eInsight_L_DynamicProfile_Expressions
+  (
+   FK_ExpressionGroupID,
+   ExpressionOrderID,
+   ExpressionCondition,
+   ExpressionFilter,
+   ExpressionInputExtractData,
+   ExpressionOutputExtractData,
+   ExpressionResultMethod,
+   ExpressionResultText,
+   ExpressionDescription
+  )
+ VALUES
+  (
+   @ExpressionGroupID, -- FK_ExpressionGroupID - int
+   @ExpressionOrderID, -- ExpressionOrderID - int
+   'Equals', -- ExpressionCondition - varchar(50)
+   @Tag, -- ExpressionFilter - varchar(50)
+   'node_ValueToCheck', -- ExpressionInputExtractData - varchar(50)
+   'dummyDataValue', -- ExpressionOutputExtractData - varchar(50)
+   'AddExtract', -- ExpressionResultMethod - varchar(100)
+   'CAST(NULL AS ' + @TagType + ')', -- ExpressionResultText - varchar(max)
+   'ProcessTagFields - Include Case'  -- ExpressionDescription - varchar(100)
+  );
+
+
+COMMIT TRANSACTION;
