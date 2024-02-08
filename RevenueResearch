@@ -1,0 +1,20 @@
+SELECT
+RRN.[PropertyId],
+RRN.[HotelId],
+RRN.[ReservationId],
+RRN.[RoomNightDate],
+RRN.[RoomTypeId],
+RRN.[RatePlanId],
+RRN.[InventoryBlockId],
+RRN.[RoomCount],
+RRN.[RateAmount],
+RRN.[RoomNumber], -- <-- Add comma here
+R.[ReservationStatusId],
+R.[ArrivalDate]
+FROM[Oliver_Production_Interface].[HnG].[ReservationRoomNight] AS RRN
+INNER JOIN
+[Oliver_Production_Interface].[HnG].[Reservation] AS R ON R.ReservationId =
+RRN.ReservationId
+WHERE
+RRN.RoomNightDate = '2024-01-19 00:00:00.000'
+AND RRN.HotelId = 357;
