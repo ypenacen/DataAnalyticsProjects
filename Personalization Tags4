@@ -1,0 +1,50 @@
+DECLARE @SortOrder INT;
+
+SELECT @SortOrder = MAX(SortOrder)
+ FROM eInsight_L_Tags
+ WHERE SortOrder IS NOT NULL;
+
+INSERT INTO eInsight_L_Tags
+  (
+   [Type],
+   Name,
+   Value,
+   Model,
+   TableName,
+   ColumnName,
+   JoinColumnName,
+   ExtractColumnName,
+   HasTemplate,
+   HasNestedTags,
+   TemplateTypeID,
+   FieldTypeID,
+   IsContainerType,
+   RequiresEncode,
+   SortOrder,
+   HasDefaultContent,
+   Example,
+   [Description],
+   SectionID
+  )
+ VALUES
+  (
+   'Personalization',
+   'chat_url',
+   '#CHAT_URL#',
+   'RegularCRM',
+   'v_oms_host',
+   'chat_url',
+   'CustomerID',
+   'chat_url',
+   0,
+   0,
+   0,
+   4, -- String
+   0,
+   0,
+   @SortOrder + 1,
+   1,
+   'http://www.mychatlink.com',
+   'link that opens new chat window to connected to the guest',
+   13 --MemberShips
+  );
