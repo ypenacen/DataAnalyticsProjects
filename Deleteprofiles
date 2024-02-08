@@ -1,0 +1,11 @@
+--create a select statement like the one below to store the deleted profiles before actually deleting them. 
+--This will allow hardik to easily delete them from eInsight by using the pk.
+--It also gives you a backup to see what exactly was removed.
+
+--select * into w_DeletedProfiles from Profiles with(nolock) where CendynPropertyID = '0'
+
+delete from Address where FK_Profiles in (select dp.PK_Profiles From w_DeletedProfiles dp with(nolock))
+Delete from Profiles_Ext where FK_Profiles in (select dp.PK_Profiles From w_DeletedProfiles dp with(nolock))
+delete from ContactMethod where FK_Profiles in (select dp.PK_Profiles From w_DeletedProfiles dp with(nolock))
+delete from ProfileDocuments where FK_Profile in (select dp.PK_Profiles From w_DeletedProfiles dp with(nolock))
+delete from Profiles where PK_Profiles in (select dp.PK_Profiles From w_DeletedProfiles dp with(nolock))
