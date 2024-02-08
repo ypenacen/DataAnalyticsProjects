@@ -1,0 +1,50 @@
+DECLARE @SortOrder INT;
+
+SELECT @SortOrder = MAX(SortOrder)
+ FROM eInsight_L_Tags
+ WHERE SortOrder IS NOT NULL;
+
+INSERT INTO eInsight_L_Tags
+  (
+   [Type],
+   Name,
+   Value,
+   Model,
+   TableName,
+   ColumnName,
+   JoinColumnName,
+   ExtractColumnName,
+   HasTemplate,
+   HasNestedTags,
+   TemplateTypeID,
+   FieldTypeID,
+   IsContainerType,
+   RequiresEncode,
+   SortOrder,
+   HasDefaultContent,
+   Example,
+   [Description],
+   SectionID
+  )
+ VALUES
+  (
+   'Personalization',--Type
+   'TravelAgentDesc',--Name
+   '#TRAVELAGENTDESC#',--Value
+   'RegularCRM',--Model
+   'V_Travel_Agent_Desc',--TableName
+   'IATADes',--ColumnName
+   'CustomerID',--JoinColumnName
+   'IATADes',--ExtractColumnName
+   0,
+   0,
+   0,
+   4, -- String(FieldTypeId)
+   0,
+   0,
+   @SortOrder + 1,
+   1,
+   'WORLD TRAVEL INC',--Example
+   'Travel Managmaent',--Description
+   1 --Customer(SectionID)
+  );
