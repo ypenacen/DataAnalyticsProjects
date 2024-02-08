@@ -1,0 +1,59 @@
+--select top 10* from L_DATA_dictionary with(nolock)
+--Where FieldName like ('anc')
+
+/*MarketSubSeg*/
+select p.CendynPropertyID, dd.PropertyCode, dd.FieldValue, dd.Description, TargetFieldValue1 from L_DATA_dictionary dd with(nolock)
+inner join D_PROPERTY p with(nolock)
+on p.PropertyCode = dd.PropertyCode
+Where dd.FieldName = 'MarketSubSeg'
+and TargetFieldName1 = 'MarketSeg'
+and p.CendynPropertyID in ('31262','31260','31263','31258')
+order by CendynPropertyID, FieldName
+
+/*RateType*/
+select p.CendynPropertyID, dd.PropertyCode, dd.FieldValue, dd.Description, dd.Notes from L_DATA_dictionary dd with(nolock)
+inner join D_PROPERTY p with(nolock)
+on p.PropertyCode = dd.PropertyCode
+Where dd.FieldName = 'RateType'
+and p.CendynPropertyID in ('31262','31260','31263','31258')
+order by CendynPropertyID, FieldName
+
+/*RoomType*/
+select p.CendynPropertyID, dd.PropertyCode, dd.FieldValue, dd.Description, dd.Notes from L_DATA_dictionary dd with(nolock)
+inner join D_PROPERTY p with(nolock)
+on p.PropertyCode = dd.PropertyCode
+Where dd.FieldName = 'RoomType'
+and p.CendynPropertyID in ('31262','31260','31263','31258')
+order by CendynPropertyID, FieldName
+
+/*SourceOfBusiness*/
+select p.CendynPropertyID, dd.PropertyCode, dd.FieldValue, dd.Description, dd.Notes from L_DATA_dictionary dd with(nolock)
+inner join D_PROPERTY p with(nolock)
+on p.PropertyCode = dd.PropertyCode
+Where dd.FieldName = 'SourceOfBusiness'
+and p.CendynPropertyID in ('31262','31260','31263','31258')
+order by CendynPropertyID, FieldName
+
+/*VIPCode*/
+select p.CendynPropertyID, dd.PropertyCode, dd.FieldValue, dd.Description from L_DATA_dictionary dd with(nolock)
+inner join D_PROPERTY p with(nolock)
+on p.PropertyCode = dd.PropertyCode
+Where dd.FieldName = 'VIPCode'
+and p.CendynPropertyID in ('31262','31260','31263','31258')
+order by CendynPropertyID, FieldName
+
+/*StayStatus*/
+select p.CendynPropertyID, dd.PropertyCode, dd.FieldValue, dd.Description from L_DATA_dictionary dd with(nolock)
+inner join D_PROPERTY p with(nolock)
+on p.PropertyCode = dd.PropertyCode
+Where dd.FieldName = 'ResStatus'
+and p.CendynPropertyID in ('31262','31260','31263','31258')
+order by CendynPropertyID, FieldName
+
+/*AncillaryExclusions*/
+--select p.CendynPropertyID, dd.PropertyCode, dd.FieldValue, dd.Description from L_DATA_dictionary dd with(nolock)
+--inner join D_PROPERTY p with(nolock)
+--on p.PropertyCode = dd.PropertyCode
+--Where dd.FieldName = 'AncillaryExclusions'
+--and p.CendynPropertyID in ('31262','31260','31263','31258')
+--order by CendynPropertyID, FieldName
