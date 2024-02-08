@@ -1,0 +1,237 @@
+SET XACT_ABORT ON;
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+GO
+
+-- Parameters:
+DECLARE @TableName VARCHAR(100) = 'V_Travel_Agent_Desc'; -- Actual name of table (or view) from which to extract data.
+DECLARE @FieldsVar VARCHAR(32) = 'TravelAgentFields'; -- Name of variable to hold fields to extract from table.
+DECLARE @ClauseVar VARCHAR(50) = 'TravelAgentsClause'; -- Name of variable to hold join clause for the extract query.
+
+DECLARE @ExpressionGroupID INT;
+DECLARE @ExpressionOrderID INT;
+DECLARE @ExpressionID INT;
+
+BEGIN TRANSACTION;
+
+-- Application2FrontEndIntegration
+SET @ExpressionGroupID = 73;
+
+SELECT @ExpressionOrderID = MAX(ExpressionOrderID) + 1
+ FROM eInsight_L_DynamicProfile_Expressions
+ WHERE FK_ExpressionGroupID = @ExpressionGroupID
+  AND ExpressionOrderID < 500;
+
+INSERT INTO eInsight_L_DynamicProfile_Expressions
+  (
+   FK_ExpressionGroupID,
+   ExpressionOrderID,
+   ExpressionCondition,
+   ExpressionFilter,
+   ExpressionInputExtractData,
+   ExpressionOutputExtractData,
+   ExpressionResultMethod,
+   ExpressionResultText,
+   ExpressionDescription
+  )
+ VALUES
+  (
+   @ExpressionGroupID, -- FK_ExpressionGroupID - int
+   @ExpressionOrderID, -- ExpressionOrderID - int
+   'Equals', -- ExpressionCondition - varchar(50)
+   @TableName, -- ExpressionFilter - varchar(50)
+   'thisEntity', -- ExpressionInputExtractData - varchar(50)
+   @FieldsVar, -- ExpressionOutputExtractData - varchar(50)
+   'AppendExtract', -- ExpressionResultMethod - varchar(100)
+   '#OUTPUT#', -- ExpressionResultText - varchar(max)
+   'Front End Unit Test Review'  -- ExpressionDescription - varchar(100)
+  );
+
+-- FrontEndIntegrationMain
+SET @ExpressionGroupID = 74;
+
+SELECT @ExpressionOrderID = MAX(ExpressionOrderID) + 1
+ FROM eInsight_L_DynamicProfile_Expressions
+ WHERE FK_ExpressionGroupID = @ExpressionGroupID;
+
+INSERT INTO eInsight_L_DynamicProfile_Expressions
+  (
+   FK_ExpressionGroupID,
+   ExpressionOrderID,
+   ExpressionCondition,
+   ExpressionFilter,
+   ExpressionInputExtractData,
+   ExpressionOutputExtractData,
+   ExpressionResultMethod,
+   ExpressionResultText,
+   ExpressionDescription
+  )
+ VALUES
+  (
+   @ExpressionGroupID, -- FK_ExpressionGroupID - int
+   @ExpressionOrderID, -- ExpressionOrderID - int
+   'ReturnTrue', -- ExpressionCondition - varchar(50)
+   '', -- ExpressionFilter - varchar(50)
+   '', -- ExpressionInputExtractData - varchar(50)
+   @FieldsVar, -- ExpressionOutputExtractData - varchar(50)
+   'AddExtract', -- ExpressionResultMethod - varchar(100)
+   '#ProcessRemoveLastComma:0:' + UPPER(@FieldsVar) + '#', -- ExpressionResultText - varchar(max)
+   'Front End Unit Test Review Main'  -- ExpressionDescription - varchar(100)
+  );
+
+-- FrontEndIntegrationallFieldNameFields
+SET @ExpressionGroupID = 75;
+
+SELECT @ExpressionOrderID = MAX(ExpressionOrderID) + 1
+ FROM eInsight_L_DynamicProfile_Expressions
+ WHERE FK_ExpressionGroupID = @ExpressionGroupID;
+
+INSERT INTO eInsight_L_DynamicProfile_Expressions
+  (
+   FK_ExpressionGroupID,
+   ExpressionOrderID,
+   ExpressionCondition,
+   ExpressionFilter,
+   ExpressionInputExtractData,
+   ExpressionOutputExtractData,
+   ExpressionResultMethod,
+   ExpressionResultText,
+   ExpressionDescription
+  )
+ VALUES
+  (
+   @ExpressionGroupID, -- FK_ExpressionGroupID - int
+   @ExpressionOrderID, -- ExpressionOrderID - int
+   'NotEquals', -- ExpressionCondition - varchar(50)
+   @TableName, -- ExpressionFilter - varchar(50)
+   'thisEntity', -- ExpressionInputExtractData - varchar(50)
+   'allFieldNameFields', -- ExpressionOutputExtractData - varchar(50)
+   'AppendExtract', -- ExpressionResultMethod - varchar(100)
+   '#ProcessParallelGroupExpression:76:THISINPUT#', -- ExpressionResultText - varchar(max)
+   'Front End Unit Test allFieldNameFields'  -- ExpressionDescription - varchar(100)
+  );
+
+SET @ExpressionID = SCOPE_IDENTITY();
+
+INSERT INTO eInsight_L_DynamicProfile_Expressions_to_joincondition_Mapping
+  (FK_ExpressionID, JoinCondition, JoinGroupID)
+ VALUES
+  (@ExpressionID, 'AND', 52);
+
+-- FrontEndIntegration:ProcessAllFields
+SET @ExpressionGroupID = 84;
+
+SELECT @ExpressionOrderID = MAX(ExpressionOrderID)
+ FROM eInsight_L_DynamicProfile_Expressions
+ WHERE FK_ExpressionGroupID = @ExpressionGroupID;
+
+UPDATE eInsight_L_DynamicProfile_Expressions
+ SET ExpressionOrderID += 1
+  WHERE FK_ExpressionGroupID = @ExpressionGroupID
+   AND ExpressionOrderID = @ExpressionOrderID;
+
+INSERT INTO eInsight_L_DynamicProfile_Expressions
+  (
+   FK_ExpressionGroupID,
+   ExpressionOrderID,
+   ExpressionCondition,
+   ExpressionFilter,
+   ExpressionInputExtractData,
+   ExpressionOutputExtractData,
+   ExpressionResultMethod,
+   ExpressionResultText,
+   ExpressionDescription
+  )
+ VALUES
+  (
+   @ExpressionGroupID, -- FK_ExpressionGroupID - int
+   @ExpressionOrderID, -- ExpressionOrderID - int
+   'ReturnTrue', -- ExpressionCondition - varchar(50)
+   '', -- ExpressionFilter - varchar(50)
+   '', -- ExpressionInputExtractData - varchar(50)
+   'currentFields', -- ExpressionOutputExtractData - varchar(50)
+   'AddExtract', -- ExpressionResultMethod - varchar(100)
+   '#ProcessSequentialGroupExpression:83:' + UPPER(@FieldsVar) + '#', -- ExpressionResultText - varchar(max)
+   'Front End Unit Test Review: ProcessAllFields'  -- ExpressionDescription - varchar(100)
+  );
+
+-- FrontEndIntegration:prepareClauses
+SET @ExpressionGroupID = 89;
+
+SELECT @ExpressionOrderID = MAX(ExpressionOrderID) + 1
+ FROM eInsight_L_DynamicProfile_Expressions
+ WHERE FK_ExpressionGroupID = @ExpressionGroupID;
+
+INSERT INTO eInsight_L_DynamicProfile_Expressions
+  (
+   FK_ExpressionGroupID,
+   ExpressionOrderID,
+   ExpressionCondition,
+   ExpressionFilter,
+   ExpressionInputExtractData,
+   ExpressionOutputExtractData,
+   ExpressionResultMethod,
+   ExpressionResultText,
+   ExpressionDescription
+  )
+ VALUES
+  (
+   @ExpressionGroupID, -- FK_ExpressionGroupID - int
+   @ExpressionOrderID, -- ExpressionOrderID - int
+   'NotEquals', -- ExpressionCondition - varchar(50)
+   '', -- ExpressionFilter - varchar(50)
+   @FieldsVar, -- ExpressionInputExtractData - varchar(50)
+   @ClauseVar, -- ExpressionOutputExtractData - varchar(50)
+   'AddExtract', -- ExpressionResultMethod - varchar(100)
+   '
+                LEFT JOIN ' + @TableName + ' WITH(NOLOCK) ON D_CUSTOMER.CustomerID = ' + @TableName + '.CustomerID
+', -- ExpressionResultText - varchar(max)
+   'Front End Unit Test Review: prepareClauses'  -- ExpressionDescription - varchar(100)
+  );
+
+UPDATE eInsight_L_DynamicProfile_Expressions
+ SET ExpressionResultText = REPLACE(ExpressionResultText, ' 
+                where ', '#' + UPPER(@ClauseVar) + '# 
+                where ')
+  WHERE ExpressionID = 2097;
+
+-- FrontEndIntegration:prepareClausesDefaultExtractQuery
+SET @ExpressionGroupID = 105;
+
+SELECT @ExpressionOrderID = MAX(ExpressionOrderID) + 1
+ FROM eInsight_L_DynamicProfile_Expressions
+ WHERE FK_ExpressionGroupID = @ExpressionGroupID;
+
+INSERT INTO eInsight_L_DynamicProfile_Expressions
+  (
+   FK_ExpressionGroupID,
+   ExpressionOrderID,
+   ExpressionCondition,
+   ExpressionFilter,
+   ExpressionInputExtractData,
+   ExpressionOutputExtractData,
+   ExpressionResultMethod,
+   ExpressionResultText,
+   ExpressionDescription
+  )
+ VALUES
+  (
+   @ExpressionGroupID, -- FK_ExpressionGroupID - int
+   @ExpressionOrderID, -- ExpressionOrderID - int
+   'NotEquals', -- ExpressionCondition - varchar(50)
+   '', -- ExpressionFilter - varchar(50)
+   @FieldsVar, -- ExpressionInputExtractData - varchar(50)
+   @ClauseVar, -- ExpressionOutputExtractData - varchar(50)
+   'AddExtract', -- ExpressionResultMethod - varchar(100)
+   '
+                LEFT JOIN ' + @TableName + ' WITH(NOLOCK) ON D_CUSTOMER.CustomerID = ' + @TableName + '.CustomerID
+', -- ExpressionResultText - varchar(max)
+   'Front End Unit Test Review: prepareClausesDefaultExtractQuery'  -- ExpressionDescription - varchar(100)
+  );
+
+UPDATE eInsight_L_DynamicProfile_Expressions
+ SET ExpressionResultText = REPLACE(ExpressionResultText, ' 
+                where ', '#' + UPPER(@ClauseVar) + '# 
+                where ')
+  WHERE ExpressionID = 2351;
+
+COMMIT TRANSACTION;
